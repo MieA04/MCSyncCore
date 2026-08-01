@@ -1,15 +1,14 @@
 package org.miea04.core.tasks.task;
 
 import org.miea04.core.tasks.parameter.TaskParams;
-import org.miea04.core.tasks.result.TaskResult;
 
 /**
  * task
  *
  * @author MieMie
  */
-public interface Task {
+public interface Task<P extends TaskParams> {
 
-    TaskResult start(TaskParams taskParams);
+    Class<?> start(P params);
 
 }

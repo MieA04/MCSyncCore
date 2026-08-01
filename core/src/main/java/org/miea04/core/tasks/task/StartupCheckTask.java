@@ -1,8 +1,7 @@
 package org.miea04.core.tasks.task;
 
 import org.miea04.core.config.PathConfig;
-import org.miea04.core.tasks.parameter.TaskParams;
-import org.miea04.core.tasks.result.TaskResult;
+import org.miea04.core.tasks.parameter.EmptyParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,43 +17,50 @@ import java.util.Map;
  *
  * @author MieMie
  */
-public class StartupCheckTask implements Task {
+public class StartupCheckTask implements Task<EmptyParams> {
     private static final Logger log = LoggerFactory.getLogger(StartupCheckTask.class);
 
-    private Map<String, Boolean> reviewDirPath() {
-        HashMap<String, Boolean> map = new HashMap<>();
+    private void matchFileHandle(PathConfig.Path path){
+        switch (path) {
+            case DEFAULT_CONFIG_FILE_PATH -> {
+                new CreateDefaultConfig().start(new EmptyParams());
+            }
+            default -> {
+            }
+        }
+    }
 
-        PathConfig.PATH_MAP.forEach((key, value) -> {
-            map.put(key, Files.exists(Paths.get(value)));
-        });
+    private Map<PathConfig.Path, Boolean> reviewDirPath() {
+        HashMap<PathConfig.Path, Boolean> map = new HashMap<>();
+
+        for (PathConfig.Path path : PathConfig.Path.values()) {
+            map.put(path, Files.exists(Paths.get(path.getValue())));
+        }
 
         return map;
     }
 
-    private
+    private void handleReviewResult(Map<PathConfig.Path, Boolean> map) {
+        for (PathConfig.Path path : map.keySet()) {
+            if (map.get(path)) continue;
 
-    private void handleReviewResult(Map<String, Boolean> map) {
-        for(String key : map.keySet()){
-            if(map.get(key)) continue;
+            Path realPath = Paths.get(path.getValue());
 
-            Path path = Paths.get(PathConfig.PATH_MAP.get(key));
-
-            if (Files.isDirectory(path)){
+            if (Files.isDirectory(realPath)){
                 try {
-                    Files.createDirectories(path);
+                    Files.createDirectories(realPath);
                 } catch (IOException e) {
                     log.error(e.getMessage());
                     throw new RuntimeException(e);
                 }
             }
 
-            // TODO: 文件创建交给专门的任务
-
+            matchFileHandle(path);
         }
     }
 
     @Override
-    public TaskResult start(TaskParams taskParams) {
+    public Class<Void> start(EmptyParams params) {
         handleReviewResult(reviewDirPath());
         return null;
     }

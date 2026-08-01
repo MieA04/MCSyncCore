@@ -2,8 +2,7 @@ package org.miea04.core;
 
 import org.miea04.core.config.Config;
 import org.miea04.core.logs.StyleFormatter;
-import org.miea04.core.tasks.result.TaskResult;
-import org.miea04.core.tasks.parameter.StartupCheckParam;
+import org.miea04.core.tasks.parameter.EmptyParams;
 import org.miea04.core.tasks.task.StartupCheckTask;
 
 /**
@@ -14,7 +13,7 @@ import org.miea04.core.tasks.task.StartupCheckTask;
 public class MCSync {
 
     void startupCheck(StartParameter startParameter){
-        TaskResult start = new StartupCheckTask().start(null);
+        Class<Void> start = new StartupCheckTask().start(new EmptyParams());
     }
 
     void serviceInit(StartParameter sp) {
