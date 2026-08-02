@@ -1,7 +1,7 @@
-package org.miea04.core.PlatForm;
+package org.miea04.core.platForm;
 
 /**
- * OSVersion
+ * PlatForm
  *
  * @author MieMie
  */

@@ -2,8 +2,6 @@ package org.miea04.core.tasks.task;
 
 import org.miea04.core.config.PathConfig;
 import org.miea04.core.tasks.parameter.EmptyParams;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -32,13 +30,13 @@ public class StartupCheckTask implements Task<EmptyParams> {
     }
 
     private static void pathCheck() {
-        for (PathConfig.Path path : PathConfig.Path.values()) {
-            if (!path.needHandle()) continue;
+        for (PathConfig.PathEntry entry : PathConfig.all()) {
+            if (!entry.needHandle()) continue;
 
-            path.createIfMissing();
+            entry.createIfMissing();
 
-            Consumer<Path> handler = HANDLERS.get(path);
-            if (handler != null) handler.accept(Paths.get(path.getPath()));
+            Consumer<Path> handler = HANDLERS.get(entry.key());
+            if (handler != null) handler.accept(Paths.get(entry.path()));
         }
     }
 }

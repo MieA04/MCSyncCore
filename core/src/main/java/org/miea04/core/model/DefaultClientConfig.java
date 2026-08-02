@@ -3,7 +3,7 @@ package org.miea04.core.model;
 import java.io.Serializable;
 
 /**
- * DefaultConfig
+ * DefaultClientConfig
  *
  * @author MieMie
  */

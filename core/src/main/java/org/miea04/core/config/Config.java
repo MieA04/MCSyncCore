@@ -12,13 +12,11 @@ import java.lang.reflect.Method;
 import java.util.Set;
 
 /**
- * config
+ * Config
  *
  * @author MieMie
  */
 public class Config {
-    private static final Logger log = LoggerFactory.getLogger(Config.class);
-
     private static final String CONFIG_PACKAGE_PATH = "org.miea04.core.config";
     private static StartMode START_MODE;
     private static DefaultServerConfig.NodeType NODE_TYPE;

@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * SyncDefaultConfig
+ * SyncDefaultClientConfig
  *
  * @author MieMie
  */

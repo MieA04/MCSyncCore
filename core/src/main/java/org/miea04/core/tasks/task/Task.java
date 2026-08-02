@@ -3,7 +3,7 @@ package org.miea04.core.tasks.task;
 import org.miea04.core.tasks.parameter.TaskParams;
 
 /**
- * task
+ * Task
  *
  * @author MieMie
  */

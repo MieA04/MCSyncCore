@@ -1,9 +1,9 @@
-package org.miea04.core.PlatForm;
+package org.miea04.core.platForm;
 
 import java.lang.management.ManagementFactory;
 
 /**
- * EnvironmentTools
+ * Environment
  *
  * @author MieMie
  */

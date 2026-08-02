@@ -23,7 +23,7 @@ public class CreateDefaultConfig implements Task<EmptyParams> {
 
     @Override
     public Class<Void> start(EmptyParams params) {
-        Path path = Paths.get(PathConfig.Path.DEFAULT_CONFIG_FILE_PATH.getPath());
+        Path path = Paths.get(PathConfig.get(PathConfig.Path.DEFAULT_CONFIG_FILE_PATH).path());
 
         PathUtil.createFileIfAbsent(path);
 
@@ -48,6 +48,6 @@ public class CreateDefaultConfig implements Task<EmptyParams> {
     }
 
     private void writeConfigContent(Path path, DefaultConfig defaultConfig){
-
+        // TODO: TOML解析库缺少写入功能，写入功能完成后再回来完成
     }
 }
