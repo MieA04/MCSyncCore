@@ -25,7 +25,7 @@ public class Main {
 //        );
 
         mcSync.start(
-                "WORK_PATH@D:/program/Java/McMod/MCSyncProject/neoforge-1.21.1/测试用服务器/test-server03-neoforge-1.21.1" +
+                "WORK_PATH@D:\\program\\Java\\McMod\\MCSyncProject\\neoforge-1.21.1\\测试用服务器\\test-server03-neoforge-1.21.1" +
                         "|" +
                         "SERVICE_MODE@SERVER" +
                         "|" +
@@ -33,11 +33,5 @@ public class Main {
                         "|" +
                         "DELEGATE_HOST@hkt.mieai.top:19241"
         );
-
-        log.info(PathConfig.Path.WORK_PATH.getValue());
-        log.info(PathConfig.Path.SYNC_PATH.getValue());
-        log.info(PathConfig.Path.GAME_MODS_PATH.getValue());
-        log.info(Config.getStartMode().value);
-        log.info(Objects.requireNonNull(Environment.platformVersion()).value);
     }
 }

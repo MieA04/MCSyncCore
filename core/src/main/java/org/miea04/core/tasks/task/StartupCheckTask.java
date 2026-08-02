@@ -5,12 +5,10 @@ import org.miea04.core.tasks.parameter.EmptyParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.EnumMap;
+import java.util.function.Consumer;
 
 /**
  * StartupCheckTask
@@ -18,50 +16,29 @@ import java.util.Map;
  * @author MieMie
  */
 public class StartupCheckTask implements Task<EmptyParams> {
-    private static final Logger log = LoggerFactory.getLogger(StartupCheckTask.class);
+    private static final EnumMap<PathConfig.Path, Consumer<Path>> HANDLERS = new EnumMap<>(PathConfig.Path.class);
 
-    private void matchFileHandle(PathConfig.Path path){
-        switch (path) {
-            case DEFAULT_CONFIG_FILE_PATH -> {
-                new CreateDefaultConfig().start(new EmptyParams());
-            }
-            default -> {
-            }
-        }
-    }
-
-    private Map<PathConfig.Path, Boolean> reviewDirPath() {
-        HashMap<PathConfig.Path, Boolean> map = new HashMap<>();
-
-        for (PathConfig.Path path : PathConfig.Path.values()) {
-            map.put(path, Files.exists(Paths.get(path.getValue())));
-        }
-
-        return map;
-    }
-
-    private void handleReviewResult(Map<PathConfig.Path, Boolean> map) {
-        for (PathConfig.Path path : map.keySet()) {
-            if (map.get(path)) continue;
-
-            Path realPath = Paths.get(path.getValue());
-
-            if (Files.isDirectory(realPath)){
-                try {
-                    Files.createDirectories(realPath);
-                } catch (IOException e) {
-                    log.error(e.getMessage());
-                    throw new RuntimeException(e);
-                }
-            }
-
-            matchFileHandle(path);
-        }
+    static {
+        HANDLERS.put(
+                PathConfig.Path.DEFAULT_CONFIG_FILE_PATH,
+                path -> new CreateDefaultConfig().start(new EmptyParams())
+        );
     }
 
     @Override
     public Class<Void> start(EmptyParams params) {
-        handleReviewResult(reviewDirPath());
+        pathCheck();
         return null;
+    }
+
+    private static void pathCheck() {
+        for (PathConfig.Path path : PathConfig.Path.values()) {
+            if (!path.needHandle()) continue;
+
+            path.createIfMissing();
+
+            Consumer<Path> handler = HANDLERS.get(path);
+            if (handler != null) handler.accept(Paths.get(path.getPath()));
+        }
     }
 }

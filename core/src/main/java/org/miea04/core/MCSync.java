@@ -11,14 +11,8 @@ import org.miea04.core.tasks.task.StartupCheckTask;
  * @author MieMie
  */
 public class MCSync {
-
-    void startupCheck(StartParameter startParameter){
-        Class<Void> start = new StartupCheckTask().start(new EmptyParams());
-    }
-
-    void serviceInit(StartParameter sp) {
-        Config.init(sp);
-        startupCheck(sp);
+    void serviceInit() {
+        new StartupCheckTask().start(new EmptyParams());
     }
 
     public void start(String parameter) {
@@ -26,7 +20,7 @@ public class MCSync {
 
         StartParameter sp = new StartParameter().build(parameter);
 
-        serviceInit(sp);
+        Config.init(sp);
+        serviceInit();
     }
-
 }

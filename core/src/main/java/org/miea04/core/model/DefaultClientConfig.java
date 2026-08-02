@@ -13,6 +13,14 @@ public class DefaultClientConfig implements Serializable {
     private String gameServerHost;
     private String delegatedServerHost;
 
+    public static DefaultClientConfig defaultInstance() {
+        DefaultClientConfig config = new DefaultClientConfig();
+        config.setHostName("");
+        config.setGameServerHost("");
+        config.setDelegatedServerHost("");
+        return config;
+    }
+
     public String getHostName() {
         return hostName;
     }
