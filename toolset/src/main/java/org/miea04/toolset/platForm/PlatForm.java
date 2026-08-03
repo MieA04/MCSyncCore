@@ -1,4 +1,4 @@
-package org.miea04.core.platForm;
+package org.miea04.toolset.platForm;
 
 /**
  * PlatForm

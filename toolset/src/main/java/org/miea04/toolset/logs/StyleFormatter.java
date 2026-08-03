@@ -1,4 +1,4 @@
-package org.miea04.core.logs;
+package org.miea04.toolset.logs;
 
 /*
  * StyleFormatter
