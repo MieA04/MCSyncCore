@@ -3,6 +3,7 @@ package org.miea04.core.tasks.task;
 import org.miea04.core.StartMode;
 import org.miea04.core.config.PathConfig;
 import org.miea04.core.tasks.parameter.EmptyParams;
+import org.miea04.core.tasks.parameter.PathParams;
 
 import java.nio.file.Path;
 import java.util.EnumMap;
@@ -26,7 +27,8 @@ public class StartupCheckTask implements Task<EmptyParams> {
     static {
         HANDLERS.put(
                 PathConfig.PathKey.DEFAULT_CONFIG_FILE_PATH,
-                path -> new CreateDefaultConfig().start(new EmptyParams())
+                path -> new CreateDefaultConfig()
+                        .start(new PathParams(path))
         );
     }
 
@@ -45,6 +47,7 @@ public class StartupCheckTask implements Task<EmptyParams> {
             entry.createIfMissing();
 
             Consumer<Path> handler = HANDLERS.get(entry.key());
+
             if (handler != null) {
                 handler.accept(entry.path());
             }

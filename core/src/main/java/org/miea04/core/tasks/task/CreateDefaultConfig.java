@@ -9,6 +9,7 @@ import org.miea04.core.tasks.parameter.EmptyParams;
 import org.miea04.core.util.PathUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.miea04.core.tasks.parameter.PathParams;
 
 import java.nio.file.Path;
 
@@ -17,20 +18,14 @@ import java.nio.file.Path;
  *
  * @author MieMie
  */
-public class CreateDefaultConfig implements Task<EmptyParams> {
+public class CreateDefaultConfig implements Task<PathParams> {
     private static final Logger log = LoggerFactory.getLogger(CreateDefaultConfig.class);
 
     @Override
-    public Class<Void> start(EmptyParams params) {
-        Path path = PathConfig.get(
-                PathConfig.PathKey.DEFAULT_CONFIG_FILE_PATH
-        ).path();
+    public Class<Void> start(PathParams params) {
+        Path path = params.path();
 
-        PathUtil.createFileIfAbsent(path);
-
-        // 生成配置模板
         DefaultConfig defaultConfig = createDefaultConfigTemplate();
-
         writeConfigContent(path, defaultConfig);
 
         return null;

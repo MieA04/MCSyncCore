@@ -15,7 +15,7 @@ public class Main {
 //                        "|" +
 //                        "NODE_TYPE@complete" +
 //                        "|" +
-//                        "SERVER_PORT@2814"
+//                        "DELEGATE_HOST@127.0.0.1:2814"
 //        );
 
         mcSync.start(

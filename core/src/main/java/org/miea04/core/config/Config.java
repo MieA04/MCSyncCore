@@ -1,6 +1,6 @@
 package org.miea04.core.config;
 
-import org.miea04.core.RuntimeOptions;
+import org.miea04.core.model.RuntimeOptions;
 import org.miea04.core.StartMode;
 import org.miea04.core.model.DefaultServerConfig;
 import java.util.Objects;
@@ -40,10 +40,6 @@ public final class Config {
 
     public static DefaultServerConfig.NodeType getNodeType() {
         return getRuntimeOptions().nodeType();
-    }
-
-    public static Integer getServerPort() {
-        return getRuntimeOptions().serverPort();
     }
 
     public static String getDelegateHost() {

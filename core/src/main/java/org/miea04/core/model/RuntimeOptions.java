@@ -1,6 +1,6 @@
-package org.miea04.core;
+package org.miea04.core.model;
 
-import org.miea04.core.model.DefaultServerConfig;
+import org.miea04.core.StartMode;
 
 import java.nio.file.Path;
 import java.util.Objects;
@@ -18,7 +18,6 @@ public record RuntimeOptions(
         Path workPath,
         StartMode serviceMode,
         DefaultServerConfig.NodeType nodeType,
-        Integer serverPort,
         String delegateHost
 ) {
     public RuntimeOptions {
@@ -29,12 +28,8 @@ public record RuntimeOptions(
         Objects.requireNonNull(serviceMode, "serviceMode");
 
         if (serviceMode == StartMode.NONE) {
-            throw new IllegalArgumentException("serviceMode cannot be NONE");
-        }
-
-        if (serverPort != null && (serverPort < 1 || serverPort > 65535)) {
             throw new IllegalArgumentException(
-                    "serverPort must be between 1 and 65535"
+                    "serviceMode cannot be NONE"
             );
         }
     }

@@ -1,6 +1,6 @@
 package org.miea04.core.config;
 
-import org.miea04.core.RuntimeOptions;
+import org.miea04.core.model.RuntimeOptions;
 import org.miea04.core.StartMode;
 import org.miea04.core.util.PathUtil;
 

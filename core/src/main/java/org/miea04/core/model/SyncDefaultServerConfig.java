@@ -16,12 +16,13 @@ public class SyncDefaultServerConfig implements Serializable, DefaultConfig{
 
     public static SyncDefaultServerConfig createDefault() {
         DefaultServerConfig config = new DefaultServerConfig();
+
         config.setNodeId(UUID.randomUUID().toString());
         config.setNodeName("");
         config.setNodeType(Config.getNodeType());
-        config.setDelegatedServerHost(Config.getNodeType() == DefaultServerConfig.NodeType.COMPLETE
-                ? "127.0.0.1:" + Config.getServerPort() : "");
+        config.setDelegatedServerHost(Config.getDelegateHost());
         config.setDelegatedServerId("");
+
         return SyncDefaultServerConfig.of(config);
     }
 

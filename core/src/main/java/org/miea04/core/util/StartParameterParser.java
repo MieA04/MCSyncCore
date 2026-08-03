@@ -1,6 +1,6 @@
 package org.miea04.core.util;
 
-import org.miea04.core.RuntimeOptions;
+import org.miea04.core.model.RuntimeOptions;
 import org.miea04.core.StartMode;
 import org.miea04.core.model.DefaultServerConfig;
 
@@ -31,8 +31,7 @@ public final class StartParameterParser {
 
         Path workPath = Path.of(required(values, "WORK_PATH"));
 
-        StartMode serviceMode =
-                StartMode.mode(required(values, "SERVICE_MODE"));
+        StartMode serviceMode = StartMode.mode(required(values, "SERVICE_MODE"));
 
         if (serviceMode == StartMode.NONE) {
             throw new IllegalArgumentException(
@@ -40,22 +39,40 @@ public final class StartParameterParser {
             );
         }
 
-        DefaultServerConfig.NodeType nodeType =
-                parseNodeType(values.get("NODE_TYPE"));
+        DefaultServerConfig.NodeType nodeType = parseNodeType(values.get("NODE_TYPE"));
 
-        Integer serverPort =
-                parsePort(values.get("SERVER_PORT"));
+        String delegateHost = emptyToNull(values.get("DELEGATE_HOST"));
 
-        String delegateHost =
-                emptyToNull(values.get("DELEGATE_HOST"));
+        validateCombination(serviceMode, nodeType, delegateHost);
 
         return new RuntimeOptions(
                 workPath,
                 serviceMode,
                 nodeType,
-                serverPort,
                 delegateHost
         );
+    }
+
+    private static void validateCombination(
+            StartMode serviceMode,
+            DefaultServerConfig.NodeType nodeType,
+            String delegateHost
+    ) {
+        if (serviceMode != StartMode.SERVER) {
+            return;
+        }
+
+        if (nodeType == null) {
+            throw new IllegalArgumentException(
+                    "NODE_TYPE is required in SERVER mode"
+            );
+        }
+
+        if (delegateHost == null) {
+            throw new IllegalArgumentException(
+                    "DELEGATE_HOST is required in SERVER mode"
+            );
+        }
     }
 
     private static Map<String, String> parseValues(String input) {
@@ -93,8 +110,7 @@ public final class StartParameterParser {
                  "SERVICE_MODE",
                  "NODE_TYPE",
                  "SERVER_PORT",
-                 "DELEGATE_HOST" -> {
-            }
+                 "DELEGATE_HOST" -> {}
             default -> throw new IllegalArgumentException(
                     "Unknown start parameter: " + key
             );
@@ -119,35 +135,13 @@ public final class StartParameterParser {
     private static DefaultServerConfig.NodeType parseNodeType(
             String value
     ) {
-        if (value == null || value.isBlank()) {
-            return null;
-        }
+        if (value == null || value.isBlank()) return null;
 
-        DefaultServerConfig.NodeType type =
-                DefaultServerConfig.NodeType.type(value);
+        DefaultServerConfig.NodeType type = DefaultServerConfig.NodeType.type(value);
 
-        if (type == null) {
-            throw new IllegalArgumentException(
-                    "Unknown NODE_TYPE: " + value
-            );
-        }
+        if (type == null) throw new IllegalArgumentException("Unknown NODE_TYPE: " + value);
 
         return type;
-    }
-
-    private static Integer parsePort(String value) {
-        if (value == null || value.isBlank()) {
-            return null;
-        }
-
-        try {
-            return Integer.valueOf(value);
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException(
-                    "Invalid SERVER_PORT: " + value,
-                    e
-            );
-        }
     }
 
     private static String emptyToNull(String value) {
