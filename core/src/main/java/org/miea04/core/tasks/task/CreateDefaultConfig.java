@@ -11,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 /**
  * CreateDefaultConfig
@@ -23,7 +22,9 @@ public class CreateDefaultConfig implements Task<EmptyParams> {
 
     @Override
     public Class<Void> start(EmptyParams params) {
-        Path path = Paths.get(PathConfig.get(PathConfig.Path.DEFAULT_CONFIG_FILE_PATH).path());
+        Path path = PathConfig.get(
+                PathConfig.PathKey.DEFAULT_CONFIG_FILE_PATH
+        ).path();
 
         PathUtil.createFileIfAbsent(path);
 

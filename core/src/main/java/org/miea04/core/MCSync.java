@@ -1,9 +1,11 @@
 package org.miea04.core;
 
 import org.miea04.core.config.Config;
+import org.miea04.core.config.PathConfig;
 import org.miea04.core.logs.StyleFormatter;
 import org.miea04.core.tasks.parameter.EmptyParams;
 import org.miea04.core.tasks.task.StartupCheckTask;
+import org.miea04.core.util.StartParameterParser;
 
 /**
  * MCSync
@@ -11,16 +13,21 @@ import org.miea04.core.tasks.task.StartupCheckTask;
  * @author MieMie
  */
 public class MCSync {
-    void serviceInit() {
-        new StartupCheckTask().start(new EmptyParams());
+
+    void serviceInit(RuntimeOptions options) {
+        new StartupCheckTask(options.serviceMode())
+                .start(new EmptyParams());
     }
 
     public void start(String parameter) {
         StyleFormatter.initLogging();
 
-        StartParameter sp = new StartParameter().build(parameter);
+        RuntimeOptions options =
+                StartParameterParser.parse(parameter);
 
-        Config.init(sp);
-        serviceInit();
+        Config.init(options);
+        PathConfig.init(options);
+
+        serviceInit(options);
     }
 }

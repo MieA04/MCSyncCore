@@ -1,10 +1,10 @@
 package org.miea04.core.tasks.task;
 
+import org.miea04.core.StartMode;
 import org.miea04.core.config.PathConfig;
 import org.miea04.core.tasks.parameter.EmptyParams;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.EnumMap;
 import java.util.function.Consumer;
 
@@ -13,12 +13,19 @@ import java.util.function.Consumer;
  *
  * @author MieMie
  */
+
 public class StartupCheckTask implements Task<EmptyParams> {
-    private static final EnumMap<PathConfig.Path, Consumer<Path>> HANDLERS = new EnumMap<>(PathConfig.Path.class);
+    private static final EnumMap<PathConfig.PathKey, Consumer<Path>> HANDLERS = new EnumMap<>(PathConfig.PathKey.class);
+
+    private final StartMode startMode;
+
+    public StartupCheckTask(StartMode startMode) {
+        this.startMode = startMode;
+    }
 
     static {
         HANDLERS.put(
-                PathConfig.Path.DEFAULT_CONFIG_FILE_PATH,
+                PathConfig.PathKey.DEFAULT_CONFIG_FILE_PATH,
                 path -> new CreateDefaultConfig().start(new EmptyParams())
         );
     }
@@ -29,14 +36,18 @@ public class StartupCheckTask implements Task<EmptyParams> {
         return null;
     }
 
-    private static void pathCheck() {
+    private void pathCheck() {
         for (PathConfig.PathEntry entry : PathConfig.all()) {
-            if (!entry.needHandle()) continue;
+            if (!entry.needHandle(startMode)) {
+                continue;
+            }
 
             entry.createIfMissing();
 
             Consumer<Path> handler = HANDLERS.get(entry.key());
-            if (handler != null) handler.accept(Paths.get(entry.path()));
+            if (handler != null) {
+                handler.accept(entry.path());
+            }
         }
     }
 }
