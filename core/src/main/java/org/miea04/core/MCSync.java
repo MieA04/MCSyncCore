@@ -1,12 +1,6 @@
 package org.miea04.core;
 
-import org.miea04.core.config.Config;
-import org.miea04.core.config.PathConfig;
 import org.miea04.core.logs.StyleFormatter;
-import org.miea04.core.model.RuntimeOptions;
-import org.miea04.core.tasks.parameter.EmptyParams;
-import org.miea04.core.tasks.task.StartupCheckTask;
-import org.miea04.core.util.StartParameterParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,22 +13,14 @@ public class MCSync {
 
     private static final Logger log = LoggerFactory.getLogger(MCSync.class);
 
-    void serviceInit(RuntimeOptions options) {
-        new StartupCheckTask(options.serviceMode())
-                .start(new EmptyParams());
+    private void initLogManager() {
+        StyleFormatter.initLogging();
     }
 
     public void start(String parameter) {
-        StyleFormatter.initLogging();
-
         log.info("MCSync starting...");
 
-        RuntimeOptions options = StartParameterParser.parse(parameter);
 
-        Config.init(options);
-        PathConfig.init(options);
-
-        serviceInit(options);
 
         log.info("MCSync start successfully.");
     }

@@ -1,8 +1,6 @@
 package org.miea04;
 
 import org.miea04.core.MCSync;
-import org.miea04.core.config.Config;
-import org.miea04.core.tasks.task.CreateDefaultConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
