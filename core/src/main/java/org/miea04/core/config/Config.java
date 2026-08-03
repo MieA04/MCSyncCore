@@ -14,8 +14,7 @@ public final class Config {
 
     private static RuntimeOptions runtimeOptions;
 
-    private Config() {
-    }
+    private Config() {}
 
     public static void init(RuntimeOptions options) {
         runtimeOptions = Objects.requireNonNull(
