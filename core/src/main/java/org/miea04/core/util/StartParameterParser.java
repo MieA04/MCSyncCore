@@ -109,7 +109,6 @@ public final class StartParameterParser {
             case "WORK_PATH",
                  "SERVICE_MODE",
                  "NODE_TYPE",
-                 "SERVER_PORT",
                  "DELEGATE_HOST" -> {}
             default -> throw new IllegalArgumentException(
                     "Unknown start parameter: " + key
