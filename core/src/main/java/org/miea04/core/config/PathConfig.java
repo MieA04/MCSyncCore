@@ -85,74 +85,27 @@ public final class PathConfig {
 
     public static void init(RuntimeOptions options) {
         java.nio.file.Path workPath = options.workPath();
-        java.nio.file.Path syncDir =
-                workPath.resolve("MCSyncData");
+        java.nio.file.Path syncDir = workPath.resolve("MCSyncData");
 
-        String modeName = options.serviceMode()
-                .name()
-                .toLowerCase(Locale.ROOT);
+        String modeName = options.serviceMode().name().toLowerCase(Locale.ROOT);
 
-        java.nio.file.Path modeDir =
-                syncDir.resolve(modeName);
+        java.nio.file.Path modeDir = syncDir.resolve(modeName);
 
-        EnumMap<PathKey, PathEntry> fresh =
-                new EnumMap<>(PathKey.class);
+        EnumMap<PathKey, PathEntry> fresh = new EnumMap<>(PathKey.class);
 
-        register(
-                fresh,
-                PathKey.WORK_PATH,
-                workPath,
-                FlagType.DIR,
-                FileMode.SHARE
-        );
+        register(fresh, PathKey.WORK_PATH, workPath, FlagType.DIR, FileMode.SHARE);
 
-        register(
-                fresh,
-                PathKey.SYNC_PATH,
-                syncDir,
-                FlagType.DIR,
-                FileMode.SHARE
-        );
+        register(fresh, PathKey.SYNC_PATH, syncDir, FlagType.DIR, FileMode.SHARE);
 
-        register(
-                fresh,
-                PathKey.GAME_MODS_PATH,
-                workPath.resolve("mods"),
-                FlagType.DIR,
-                FileMode.SHARE
-        );
+        register(fresh, PathKey.GAME_MODS_PATH, workPath.resolve("mods"), FlagType.DIR, FileMode.SHARE);
 
-        register(
-                fresh,
-                PathKey.CLIENT_DIR,
-                syncDir.resolve("client"),
-                FlagType.DIR,
-                FileMode.CLIENT
-        );
+        register(fresh, PathKey.CLIENT_DIR, syncDir.resolve("client"), FlagType.DIR, FileMode.CLIENT);
 
-        register(
-                fresh,
-                PathKey.SERVER_DIR,
-                syncDir.resolve("server"),
-                FlagType.DIR,
-                FileMode.SERVER
-        );
+        register(fresh, PathKey.SERVER_DIR, syncDir.resolve("server"), FlagType.DIR, FileMode.SERVER);
 
-        register(
-                fresh,
-                PathKey.LOGS_PATH,
-                modeDir.resolve("logs"),
-                FlagType.DIR,
-                FileMode.SHARE
-        );
+        register(fresh, PathKey.LOGS_PATH, modeDir.resolve("logs"), FlagType.DIR, FileMode.SHARE);
 
-        register(
-                fresh,
-                PathKey.DEFAULT_CONFIG_FILE_PATH,
-                modeDir.resolve("default.toml"),
-                FlagType.FILE,
-                FileMode.from(options.serviceMode())
-        );
+        register(fresh, PathKey.DEFAULT_CONFIG_FILE_PATH, modeDir.resolve("default.toml"), FlagType.FILE, FileMode.from(options.serviceMode()));
 
         REGISTRY.clear();
         REGISTRY.putAll(fresh);

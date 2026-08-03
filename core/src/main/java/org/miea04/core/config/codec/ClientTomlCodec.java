@@ -3,6 +3,7 @@ package org.miea04.core.config.codec;
 import com.electronwill.nightconfig.core.CommentedConfig;
 import com.electronwill.nightconfig.core.Config;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
+import com.electronwill.nightconfig.toml.TomlFormat;
 import org.miea04.core.model.DefaultClientConfig;
 import org.miea04.core.model.SyncDefaultClientConfig;
 
@@ -17,7 +18,7 @@ public final class ClientTomlCodec implements ConfigCodec<SyncDefaultClientConfi
     public SyncDefaultClientConfig read(Path path) {Objects.requireNonNull(path, "path");
 
         try (
-                CommentedFileConfig toml = CommentedFileConfig.builder(path).sync().build()
+                CommentedFileConfig toml = CommentedFileConfig.builder(path, TomlFormat.instance()).sync().build()
         ) {
 
             toml.load();
@@ -84,42 +85,38 @@ public final class ClientTomlCodec implements ConfigCodec<SyncDefaultClientConfi
                 "client config table"
         );
 
-        try (
-                CommentedFileConfig toml = CommentedFileConfig.builder(path).sync().build()
-        ) {
-            toml.clear();
+        CommentedConfig toml =
+                TomlWriteSupport.createConfig();
 
-            toml.set(
-                    "schemaVersion",
-                    TomlReadSupport.SCHEMA_VERSION
+        toml.set(
+                "schemaVersion",
+                TomlReadSupport.SCHEMA_VERSION
+        );
+
+        toml.set("clientId", config.getClientId());
+
+        List<CommentedConfig> servers =
+                new ArrayList<>();
+
+        for (DefaultClientConfig server : config.getTable()) {
+            CommentedConfig table =
+                    toml.createSubConfig();
+
+            table.set("name", server.getHostName());
+            table.set(
+                    "gameServerHost",
+                    server.getGameServerHost()
+            );
+            table.set(
+                    "delegatedServerHost",
+                    server.getDelegatedServerHost()
             );
 
-            toml.set("clientId", config.getClientId());
-
-            List<CommentedConfig> servers =
-                    new ArrayList<>();
-
-            for (DefaultClientConfig server : config.getTable()) {
-                CommentedConfig table =
-                        toml.createSubConfig();
-
-                table.set("name", server.getHostName());
-
-                table.set(
-                        "gameServerHost",
-                        server.getGameServerHost()
-                );
-
-                table.set(
-                        "delegatedServerHost",
-                        server.getDelegatedServerHost()
-                );
-
-                servers.add(table);
-            }
-
-            toml.set("servers", servers);
-            toml.save();
+            servers.add(table);
         }
+
+        toml.set("servers", servers);
+
+        TomlWriteSupport.write(path, toml);
     }
 }

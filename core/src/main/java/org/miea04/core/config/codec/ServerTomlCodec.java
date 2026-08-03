@@ -106,47 +106,42 @@ public final class ServerTomlCodec implements ConfigCodec<SyncDefaultServerConfi
                         "server config table"
                 );
 
-        try (
-                CommentedFileConfig toml = CommentedFileConfig.builder(path).sync().build()
-        ) {
+        CommentedConfig toml =
+                TomlWriteSupport.createConfig();
 
-            toml.clear();
+        toml.set(
+                "schemaVersion",
+                TomlReadSupport.SCHEMA_VERSION
+        );
 
-            toml.set(
-                    "schemaVersion",
-                    TomlReadSupport.SCHEMA_VERSION
-            );
+        CommentedConfig node =
+                toml.createSubConfig();
 
-            CommentedConfig node =
-                    toml.createSubConfig();
+        node.set("id", value.getNodeId());
+        node.set("name", value.getNodeName());
+        node.set(
+                "type",
+                value.getNodeType()
+                        .name()
+                        .toLowerCase(Locale.ROOT)
+        );
 
-            node.set("id", value.getNodeId());
-            node.set("name", value.getNodeName());
+        CommentedConfig delegate =
+                toml.createSubConfig();
 
-            node.set(
-                    "type",
-                    value.getNodeType()
-                            .name()
-                            .toLowerCase(Locale.ROOT)
-            );
+        delegate.set(
+                "id",
+                value.getDelegatedServerId()
+        );
 
-            CommentedConfig delegate =
-                    toml.createSubConfig();
+        delegate.set(
+                "host",
+                value.getDelegatedServerHost()
+        );
 
-            delegate.set(
-                    "id",
-                    value.getDelegatedServerId()
-            );
+        toml.set("node", node);
+        toml.set("delegate", delegate);
 
-            delegate.set(
-                    "host",
-                    value.getDelegatedServerHost()
-            );
-
-            toml.set("node", node);
-            toml.set("delegate", delegate);
-
-            toml.save();
-        }
+        TomlWriteSupport.write(path, toml);
     }
 }

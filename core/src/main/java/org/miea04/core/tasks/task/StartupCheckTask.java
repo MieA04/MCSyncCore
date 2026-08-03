@@ -40,11 +40,14 @@ public class StartupCheckTask implements Task<EmptyParams> {
 
     private void pathCheck() {
         for (PathConfig.PathEntry entry : PathConfig.all()) {
-            if (!entry.needHandle(startMode)) {
+            if (!entry.fileMode().matches(startMode)) {
                 continue;
             }
 
-            entry.createIfMissing();
+            if (entry.flagType() == PathConfig.FlagType.DIR) {
+                entry.createIfMissing();
+                continue;
+            }
 
             Consumer<Path> handler = HANDLERS.get(entry.key());
 
